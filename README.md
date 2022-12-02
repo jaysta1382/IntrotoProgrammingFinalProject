@@ -1,12 +1,12 @@
 # IntrotoProgrammingFinalProject
 # Jaysta Jump
-its a spinoff of doodle jump
+it is a spinoff of doodle jump
 
 # Description
-a platforming videogame where you must ascend and die when you descend
+a platforming videogame where you must ascend. You die when you descend
 
 # Dependencies
-must have python and pygame downloaded
+you must have python and pygame downloaded
 
 # Installing
 - Download "game" folder
