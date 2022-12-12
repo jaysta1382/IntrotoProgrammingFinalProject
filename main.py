@@ -1,5 +1,5 @@
 # content from kids can code: http://kidscancode.org/blog/
-
+# for inserting image: https://www.sololearn.com/discuss/2499517/how-to-insert-image-in-python
 # import libraries and modules
 # from platform import platform
 import pygame as pg
