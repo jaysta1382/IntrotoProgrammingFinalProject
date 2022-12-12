@@ -17,7 +17,7 @@ HEIGHT = 800
 FPS = 30
 
 #load images
-jumpman_image = pygame.image.load('assets/jump')
+jumpman_image = pg.image.load('assets/jump')
 
 # player settings
 PLAYER_GRAV = 1.0
