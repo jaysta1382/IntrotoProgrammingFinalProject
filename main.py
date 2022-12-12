@@ -3,16 +3,21 @@
 # import libraries and modules
 # from platform import platform
 import pygame as pg
+pg.init
 from pygame.sprite import Sprite
 import random
 from random import randint
 
 vec = pg.math.Vector2
 
+
 # window size 
-WIDTH = 1000
+WIDTH = 800
 HEIGHT = 800
 FPS = 30
+
+#load images
+jumpman_image = pygame.image.load('assets/jump')
 
 # player settings
 PLAYER_GRAV = 1.0
@@ -189,7 +194,7 @@ class Mob1(Sprite):
 pg.init()
 pg.mixer.init()
 screen = pg.display.set_mode((WIDTH, HEIGHT))
-pg.display.set_caption("My Game...")
+pg.display.set_caption("Jaysta Jump")
 clock = pg.time.Clock()
   
 # creates groups to write code easier later
