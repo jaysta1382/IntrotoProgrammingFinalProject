@@ -6,23 +6,19 @@ import pygame as pg
 pg.init()
 from pygame.sprite import Sprite
 import random
+import os
 from random import randint
 
 vec = pg.math.Vector2
 
-WIDTH = 800
-HEIGHT = 800
+WIDTH = 500
+HEIGHT = 700
 FPS = 30
 
 # window size 
 screen = pg.display.set_mode((WIDTH, HEIGHT))
 
-#load images
-# character = pg.image.load('images/yunobo.png')
-# background = pg.image.load('image/background.png')
-
-# #draw background
-# screen.blit(character, (0,0))
+#background = pg.image.load(os.path.join(images_folder, 'background.png')).convert()
 
 # player settings
 PLAYER_GRAV = 1.0
@@ -297,9 +293,10 @@ while running:
 
     # fills the background screen with black
     screen.fill(BLACK)
+    screen.cblit(background,(0,0))
     # draws the scoreboard (all the mobs hit)
-    draw_text("POINTS: " + str(SCORE), 25, WHITE, WIDTH / 2, HEIGHT / 10)
-    draw_text("SCORE 60 POINTS!!!", 40, WHITE, WIDTH / 2, HEIGHT / 24)
+    draw_text("POINTS: " + str(SCORE), 25, BLUE, WIDTH / 2, HEIGHT / 10)
+    draw_text("SCORE 60 POINTS!!!", 50, BLUE, WIDTH / 2, HEIGHT / 24)
     # draws all sprites
     all_sprites.draw(screen)
 
