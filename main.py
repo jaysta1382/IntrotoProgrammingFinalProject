@@ -3,21 +3,26 @@
 # import libraries and modules
 # from platform import platform
 import pygame as pg
-pg.init
+pg.init()
 from pygame.sprite import Sprite
 import random
 from random import randint
 
 vec = pg.math.Vector2
 
-
-# window size 
 WIDTH = 800
 HEIGHT = 800
 FPS = 30
 
+# window size 
+screen = pg.display.set_mode((WIDTH, HEIGHT))
+
 #load images
-jumpman_image = pg.image.load('assets/jump')
+# character = pg.image.load('images/yunobo.png')
+# background = pg.image.load('image/background.png')
+
+# #draw background
+# screen.blit(character, (0,0))
 
 # player settings
 PLAYER_GRAV = 1.0
@@ -45,7 +50,7 @@ class Player(Sprite):
     def __init__(self):
         Sprite.__init__(self)
         self.image = pg.Surface((50, 50))
-        self.image.fill(GREEN)
+        self.image.fill(GREEN)        
         self.rect = self.image.get_rect()
         self.rect.center = (WIDTH/2, HEIGHT/2)
         self.pos = vec(WIDTH/2, HEIGHT/2)
