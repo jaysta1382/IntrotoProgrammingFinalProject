@@ -7,6 +7,7 @@ pg.init()
 from pygame.sprite import Sprite
 import random
 import os
+
 from random import randint
 
 vec = pg.math.Vector2
@@ -18,7 +19,12 @@ FPS = 30
 # window size 
 screen = pg.display.set_mode((WIDTH, HEIGHT))
 
-#background = pg.image.load(os.path.join(images_folder, 'background.png')).convert()
+#load images
+# character = pg.image.load('images/yunobo.png')
+# background = pg.image.load('image/background.png')
+
+# #draw background
+# screen.blit(character, (0,0))
 
 # player settings
 PLAYER_GRAV = 1.0
@@ -30,7 +36,7 @@ WHITE = (255, 255, 255)
 BLACK = (0, 0, 0)
 RED = (255, 0, 0)
 GREEN = (0, 255, 0)
-BLUE = (0, 0, 255)
+BLUE = (0, 200, 255)
 
 def draw_text(text, size, color, x, y):
         font_name = pg.font.match_font('underline')
@@ -39,7 +45,6 @@ def draw_text(text, size, color, x, y):
         text_rect = text_surface.get_rect()
         text_rect.midtop = (x, y)
         screen.blit(text_surface, text_rect)
-
 
 # instantiates the class of the player
 class Player(Sprite):
@@ -55,12 +60,8 @@ class Player(Sprite):
     #defines the controls of the player class
     def controls(self):
         keys = pg.key.get_pressed()
-        # if keys[pg.K_w]:
-        #     self.acc.y = -5
         if keys[pg.K_a]:
             self.acc.x = -5
-        # if keys[pg.K_s]:
-        #     self.acc.y = 5
         if keys[pg.K_d]:
             self.acc.x = 5
     #allows the player class the ability to jump
@@ -104,8 +105,7 @@ class Player(Sprite):
                 self.hity = hits[0].rect.centery
             else:
                 self.colliding = False
-
-
+        
         if dir == 'y':
             hits = pg.sprite.spritecollide(self, all_plats, False)
             if hits:
@@ -126,13 +126,12 @@ class Player(Sprite):
             else:
                 self.colliding = False
 
-
 # instantiates the platform class
 class Platform(Sprite):
     def __init__(self, x, y, w, h):
         Sprite.__init__(self)
         self.image = pg.Surface((w, h))
-        self.image.fill(GREEN)
+        self.image.fill(BLACK)
         self.rect = self.image.get_rect()
         self.rect.x = x
         self.rect.y = y
@@ -206,7 +205,7 @@ mobs = pg.sprite.Group()
 # instantiates classes
 player = Player()
 #leve 1
-plat2 = Platform(40, 760, 200, 30)
+plat2 = Platform(0, 690, 800, 30)
 plat3 = Platform(400, 760, 200, 30)
 plat4 = Platform(770, 760, 200, 30)
 #level 2
@@ -221,7 +220,7 @@ plat10 = Platform(800, 200, 200, 30)
 
 
 #defines the amount of mob classes displayed
-for i in range(80):
+for i in range(15):
     # instantiate mob class repeatedly
     m = Mob1(randint(0, WIDTH), randint(0,HEIGHT), 35, 35, (randint(0,255), randint(0,255) , randint(0,255)))
     all_sprites.add(m)
@@ -292,18 +291,17 @@ while running:
     all_sprites.update()
 
     # fills the background screen with black
-    screen.fill(BLACK)
-    screen.cblit(background,(0,0))
+    screen.fill(BLUE)
     # draws the scoreboard (all the mobs hit)
-    draw_text("POINTS: " + str(SCORE), 25, BLUE, WIDTH / 2, HEIGHT / 10)
-    draw_text("SCORE 60 POINTS!!!", 50, BLUE, WIDTH / 2, HEIGHT / 24)
+    draw_text("POINTS: " + str(SCORE), 25, BLACK, WIDTH / 2, HEIGHT / 10)
+    draw_text("SCORE 60 POINTS!!!", 50, BLACK, WIDTH / 2, HEIGHT / 24)
     # draws all sprites
     all_sprites.draw(screen)
+    #if the scoreboard reaches 60, the game will quit and display that you wo
+    if SCORE >= 5:
+        draw_text("you win!!!", 100, RED, WIDTH/2, HEIGHT/4)
 
     # buffer - after drawing everything, flip display
     pg.display.flip()
-
-#if the scoreboard reaches 60, the game will quit and display that you won
-if SCORE == 5:
-    print ("you win!!!")
-    pg.quit()
+    
+pg.quit()
