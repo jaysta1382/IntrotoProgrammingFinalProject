@@ -1,10 +1,11 @@
 ##SOURCES##
 #RJ PROFETA
 # Microsoft Paint
-# Scotty Francis
 # Mr. Cozort
+# Scotty Francis
+
 # for inspo: https://www.youtube.com/watch?v=5FMPAt0n3Nc&list=LL&index=1&t=554s
-# for help with python: https://www.youtube.com/watch?v=5FMPAt0n3Nc&list=LL&index=1&t=554s
+# for outline: https://github.com/russs123/Jumpy
 # for easy/understandable content:  http://kidscancode.org/blog/
 # for inserting image: https://www.sololearn.com/discuss/2499517/how-to-insert-image-in-python
 #Import Settings file
@@ -27,6 +28,9 @@ img_folder = os.path.join(game_folder, 'images')
 # sets boundaries of the game window
 WIDTH = 500
 HEIGHT = 700
+
+#set frame rate
+clock = pg.time.Clock
 FPS = 30
 
 # player settings
@@ -63,12 +67,6 @@ class Player(Sprite):
         self.pos = vec(WIDTH/2, HEIGHT/2)
         self.vel = vec(0,0)
         self.acc = vec(0,0)
-    # keeps player from going off the screen 
-    def boundscheck(self):
-        if not self.rect.x > 0 or not self.rect.x < WIDTH:
-            self.speedx *=-1
-        if not self.rect.y > 0 or not self.rect.y < HEIGHT:
-            self.speedy *= -1
     # deines the controls of the players (only left and right)
     def controls(self):
         keys = pg.key.get_pressed()
@@ -83,6 +81,12 @@ class Player(Sprite):
         self.rect.x += -1
         if hits:
             self.vel.y = -20
+    # keeps player from going off the screen 
+    def boundscheck(self):
+        if not self.rect.x > 0 or not self.rect.x < WIDTH:
+            self.speedx *=-1
+        if not self.rect.y > 0 or not self.rect.y < HEIGHT:
+            self.speedy *= -1
     #constantly updates the player class
     def update(self):
         self.acc = vec(0,PLAYER_GRAV)
@@ -105,8 +109,6 @@ class Player(Sprite):
                 self.hity = hits[0].rect.centery
                 xdiff = abs(self.rect.centerx - hits[0].rect.centerx)
                 ydiff = abs(self.rect.centery - hits[0].rect.centery)
-                # print("xdif " + str(xdiff))
-                # print("ydif " + str(ydiff))
                 if hits[0].rect.centerx > self.rect.centerx and xdiff > ydiff:
                     self.pos.x = hits[0].rect.left - self.rect.width/2
                 if hits[0].rect.centerx < self.rect.centerx and xdiff > ydiff:
@@ -117,16 +119,12 @@ class Player(Sprite):
                 self.hity = hits[0].rect.centery
             else:
                 self.colliding = False
-    
         if dir == 'y':
             hits = pg.sprite.spritecollide(self, all_plats, False)
             if hits:
                 self.colliding = True
                 xdiff = abs(self.rect.centerx - hits[0].rect.centerx)
                 ydiff = abs(self.rect.centery - hits[0].rect.centery)
-                # print("xdif " + str(xdiff))
-                # print("ydif " + str(ydiff))
-
                 if hits[0].rect.centery > self.rect.centery and xdiff < ydiff:
                     self.pos.y = hits[0].rect.top - self.rect.height/2
                 if hits[0].rect.centery < self.rect.centery and xdiff < ydiff:
@@ -137,6 +135,11 @@ class Player(Sprite):
                 self.hity = hits[0].rect.centery
             else:
                 self.colliding = False
+
+
+
+
+
 
 # instantiates the platform class
 class Platform(Sprite):
@@ -296,15 +299,19 @@ while running:
     # update all sprites
     all_sprites.update()
 
-    screen.fill(WHITE)
+    # draws the screen's bakcground 
+    screen.fill(BLACK)
+    screen.blit(background, (0,0))
     # draws the scoreboard (all the mobs hit)
-    draw_text("JAYSTA JUMP",  80, BLACK, WIDTH / 2, HEIGHT / 38 )    
-    draw_text("objective: score 60 points", 25, BLACK, WIDTH / 2, HEIGHT / 10)
+    draw_text("JAYSTA JUMP",  70, BLACK, 170, 15 )    
+    draw_text("OBJECTIVE: SCORE 10 POINTS", 20, BLACK,  105, 65)
+    draw_text("POINTS: " + str(SCORE), 22, BLACK, 42, 80)
+
     # draws all sprites
     all_sprites.draw(screen)
     #if the scoreboard reaches 60, the game will quit and display that you wo
-    if SCORE >= 5:
-        draw_text("you win bro!!!!", 100, RED, WIDTH/2, HEIGHT/4)
+    if SCORE >= 10:
+        draw_text("YOU WIN BRO!!!!", 80, BLACK, WIDTH/2, HEIGHT/3)
 
     # buffer - after drawing everything, flip display
     pg.display.flip()
