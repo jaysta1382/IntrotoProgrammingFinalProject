@@ -1,14 +1,16 @@
-##SOURCES##
-#RJ PROFETA
+# RJ PROFETA'S VIDEOGAME: JAYSTA JUMP
+
+
+##  SOURCES ##
 # Microsoft Paint
 # Mr. Cozort
 # Scotty Francis
-
+# Charile Premo 
 # for inspo: https://www.youtube.com/watch?v=5FMPAt0n3Nc&list=LL&index=1&t=554s
 # for outline: https://github.com/russs123/Jumpy
 # for easy/understandable content:  http://kidscancode.org/blog/
-# for inserting image: https://www.sololearn.com/discuss/2499517/how-to-insert-image-in-python
-#Import Settings file
+# for inserting image: https://web.microsoftstream.com/video/b1bdbe8e-edc6-47a8-a2f9-c1aaf1b7930f
+# for creating a high score: https://stackoverflow.com/questions/64696573/highscore-in-pygame-game
 
 # importing necessary libraries and modules
 import pygame as pg
@@ -27,7 +29,7 @@ img_folder = os.path.join(game_folder, 'images')
 
 # sets boundaries of the game window
 WIDTH = 500
-HEIGHT = 700
+HEIGHT = 750
 
 #set frame rate
 clock = pg.time.Clock
@@ -36,6 +38,7 @@ FPS = 30
 # player settings
 PLAYER_GRAV = 1.0
 SCORE = 0
+HIGHSCORE = 0
 
 # defines colors
 WHITE = (255, 255, 255)
@@ -61,7 +64,8 @@ class Player(Sprite):
     def __init__(self):
         Sprite.__init__(self)
         # creates the main character(link) by pulling file from an outside source and adding it to player sprite
-        self.image = pg.image.load(os.path.join(img_folder, 'link.png')).convert()
+        self.image = pg.image.load(os.path.join(img_folder, 'link2.png')).convert()
+        self.image.set_colorkey(WHITE)
         self.rect = self.image.get_rect()
         self.rect.center = (WIDTH/2, HEIGHT/2)
         self.pos = vec(WIDTH/2, HEIGHT/2)
@@ -146,9 +150,25 @@ class Platform(Sprite):
     def __init__(self, x, y, w, h):
         Sprite.__init__(self)
         self.image = pg.Surface((w, h))
+        self.image = pg.image.load(os.path.join(img_folder, 'platform2.png')).convert()
         self.rect = self.image.get_rect()
         self.rect.x = x
         self.rect.y = y
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 #instantiates the mob class
@@ -156,13 +176,14 @@ class Mob1(Sprite):
     def __init__(self, x, y, w, h, color):
         Sprite.__init__(self)
         self.image = pg.Surface((w,h))
+        self.image = pg.image.load(os.path.join(img_folder, 'rupee.png')).convert()
+        self.image.set_colorkey(WHITE)
         self.color = color
-        self.image.fill(RED)
         self.rect = self.image.get_rect()
         self.rect.x = x
         self.rect.y = y
-        self.speedx = 5*random.choice([-1,1])
-        self.speedy = 5*random.choice([-1,1])
+        self.speedx = 3*random.choice([-1,1])
+        self.speedy = 3*random.choice([-1,1])
         self.inbounds = True
     #defines the mob class collision with walls
     def collide_with_walls(self, dir):
@@ -217,7 +238,7 @@ pg.display.set_caption("Jaysta Jump")
 clock = pg.time.Clock()
 
 # pulls the wanted background image rfom assets folder
-background = pg.image.load(os.path.join(img_folder, 'background.png')).convert()
+background = pg.image.load(os.path.join(img_folder, 'background2.png')).convert()
 background_rect = background.get_rect() 
 
 
@@ -229,9 +250,9 @@ mobs = pg.sprite.Group()
 # instantiates classes
 player = Player()
 #leve 1
-plat2 = Platform(0, 690, 800, 30)
-plat3 = Platform(400, 760, 200, 30)
-plat4 = Platform(770, 760, 200, 30)
+plat2 = Platform(100, 730, 10, 30)
+plat3 = Platform(0, 730, 100, 30)
+plat4 = Platform(200, 730, 200, 30)
 
 
 #defines the amount of mob classes displayed
@@ -267,6 +288,8 @@ class Player(pg.sprite.Sprite):
         self.surf.fill((255, 255, 255))
         self.rect = self.surf.get_rect()
 
+def show_go_screen():
+    draw_text(screen, str(HIGHSCORE), 20, WIDTH / 2, 10)
 
 # general game loop
 running = True
@@ -300,17 +323,19 @@ while running:
     all_sprites.update()
 
     # draws the screen's bakcground 
-    screen.fill(BLACK)
+    screen.fill(WHITE)
     screen.blit(background, (0,0))
     # draws the scoreboard (all the mobs hit)
-    draw_text("JAYSTA JUMP",  70, BLACK, 170, 15 )    
-    draw_text("OBJECTIVE: SCORE 10 POINTS", 20, BLACK,  105, 65)
-    draw_text("POINTS: " + str(SCORE), 22, BLACK, 42, 80)
+    draw_text("JAYSTA JUMP",  70, BLACK, WIDTH/2, 15 )    
+    draw_text("OBJECTIVE: SCORE 10 POINTS", 20, BLACK, 108, 65)
+    draw_text("POINTS: " + str(SCORE), 20, BLACK, 41, 80)
 
     # draws all sprites
     all_sprites.draw(screen)
     #if the scoreboard reaches 60, the game will quit and display that you wo
-    if SCORE >= 10:
+    if SCORE > HIGHSCORE:
+            HIGHSCORE = SCORE
+    if SCORE >= 100:
         draw_text("YOU WIN BRO!!!!", 80, BLACK, WIDTH/2, HEIGHT/3)
 
     # buffer - after drawing everything, flip display
