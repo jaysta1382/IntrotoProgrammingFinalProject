@@ -17,8 +17,8 @@ FPS = 30
 
 
 #load images
-# character = pg.image.load('images/yunobo.png')
-# background = pg.image.load('image/background.png')
+character = pg.image.load('game_folder/yunobo.png')
+background = pg.image.load('game_folder/background.png')
 
 # #draw background
 # screen.blit(character, (0,0))
