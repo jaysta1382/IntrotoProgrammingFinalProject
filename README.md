@@ -3,7 +3,7 @@
 it is a spinoff of doodle jump
 
 # Description
-a platforming videogame where you must ascend. You die when you descend
+a platforming videogame where you must ascend and you lose when you descend
 
 # Dependencies
 you must have python and pygame downloaded
