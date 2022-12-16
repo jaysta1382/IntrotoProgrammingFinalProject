@@ -35,11 +35,13 @@ HEIGHT = 750
 clock = pg.time.Clock
 FPS = 30
 
-# player settings
+# global variablves
+SCROLL_THRESH = 200
 PLAYER_GRAV = 1.0
 SCORE = 0
 HIGHSCORE = 0
-
+MAX_PLATFORMS = 10
+scroll = 0
 # defines colors
 WHITE = (255, 255, 255)
 BLACK = (0, 0, 0)
@@ -71,13 +73,20 @@ class Player(Sprite):
         self.pos = vec(WIDTH/2, HEIGHT/2)
         self.vel = vec(0,0)
         self.acc = vec(0,0)
+        self.inbounds = True
+        self.flip = False
     # deines the controls of the players (only left and right)
     def controls(self):
         keys = pg.key.get_pressed()
         if keys[pg.K_a]:
-            self.acc.x -= 10
+            self.acc.x -= 5
+            self.flip = False
         if keys[pg.K_d]:
-            self.acc.x += 10
+            self.acc.x += 5
+            self.flip = True
+    def draw(self):
+        screen.blit(self.image, self.rect)
+        pg.draw.rect(screen, WHITE, self.rect, 2)
     #allows the player class the ability to jump
     def jump(self):
         self.rect.x += 1
@@ -85,27 +94,19 @@ class Player(Sprite):
         self.rect.x += -1
         if hits:
             self.vel.y = -20
-    # keeps player from going off the screen 
-    def boundscheck(self):
-        if not self.rect.x > 0 or not self.rect.x < WIDTH:
-            self.speedx *=-1
-        if not self.rect.y > 0 or not self.rect.y < HEIGHT:
-            self.speedy *= -1
     #constantly updates the player class
     def update(self):
         self.acc = vec(0,PLAYER_GRAV)
         self.controls()
         # friction
         self.acc.x += self.vel.x * -0.1
-        # self.acc.y += self.vel.y * -0.1
         self.vel += self.acc
         self.pos += self.vel + 0.5 * self.acc
-        # self.rect.x += self.xvel
-        # self.rect.y += self.yvel
         self.rect.midbottom = self.pos
     # defines the player clss and platform interactions
     def collide_with_walls(self, dir):
         if dir == 'x':
+            
             hits = pg.sprite.spritecollide(self, all_plats, False)
             if hits:
                 self.colliding = True
@@ -139,6 +140,7 @@ class Player(Sprite):
                 self.hity = hits[0].rect.centery
             else:
                 self.colliding = False
+            
 
 
 
@@ -241,7 +243,6 @@ clock = pg.time.Clock()
 background = pg.image.load(os.path.join(img_folder, 'background2.png')).convert()
 background_rect = background.get_rect() 
 
-
 # creates groups to write code easier later
 all_sprites = pg.sprite.Group()
 all_plats = pg.sprite.Group()
@@ -249,14 +250,18 @@ mobs = pg.sprite.Group()
 
 # instantiates classes
 player = Player()
-#leve 1
-plat2 = Platform(100, 730, 10, 30)
-plat3 = Platform(0, 730, 100, 30)
-plat4 = Platform(200, 730, 200, 30)
 
+# create randomly generated platforms
+for p in range(MAX_PLATFORMS):
+    p_w = random.randint(40,60)
+    p_x = random.randint(0, WIDTH - p_w)
+    p_y = p * random.randint(80,120)
+    p_h = random.randint(0, 200)
+    platform = Platform(p_x, p_y, p_w, p_h)
+    all_plats.add(platform)
 
 #defines the amount of mob classes displayed
-for i in range(15):
+for i in range(30):
     # instantiate mob class repeatedly
     m = Mob1(randint(0, WIDTH), randint(0,HEIGHT), 35, 35, (randint(0,255), randint(0,255) , randint(0,255)))
     all_sprites.add(m)
@@ -272,13 +277,7 @@ while running:
         
 # adds player to all sprites group
 all_sprites.add(player)
-all_plats.add(plat2, plat3, plat4)
-
-# adds all platforms to the sprites group
-all_sprites.add(plat2)
-all_sprites.add(plat3)
-all_sprites.add(plat4)
-
+all_plats.add()
 
 # adds things to their respective groups
 class Player(pg.sprite.Sprite):
@@ -297,6 +296,8 @@ while running:
     # keep the loop running using clock
     clock.tick(FPS)
     
+    #PLAYER DRAW
+    player.draw()
     #defines the interactions between player class and mob class
     hits = pg.sprite.spritecollide(player, all_plats, False)
     if hits:
@@ -319,6 +320,8 @@ while running:
             running = False
         # check for mouse
         
+    # drawing a temprorary scroll threshold
+    pg.draw.line(screen, BLACK, (0, SCROLL_THRESH), (WIDTH, SCROLL_THRESH))
     # update all sprites
     all_sprites.update()
 
@@ -327,16 +330,17 @@ while running:
     screen.blit(background, (0,0))
     # draws the scoreboard (all the mobs hit)
     draw_text("JAYSTA JUMP",  70, BLACK, WIDTH/2, 15 )    
-    draw_text("OBJECTIVE: SCORE 10 POINTS", 20, BLACK, 108, 65)
+    draw_text("OBJECTIVE: SCORE 20 POINTS", 20, BLACK, 108, 65)
     draw_text("POINTS: " + str(SCORE), 20, BLACK, 41, 80)
 
     # draws all sprites
     all_sprites.draw(screen)
+    all_plats.draw(screen)
     #if the scoreboard reaches 60, the game will quit and display that you wo
     if SCORE > HIGHSCORE:
             HIGHSCORE = SCORE
-    if SCORE >= 100:
-        draw_text("YOU WIN BRO!!!!", 80, BLACK, WIDTH/2, HEIGHT/3)
+    if SCORE >= 20:
+        draw_text("YOU'VE WON!!!!", 80, BLACK, WIDTH/2, HEIGHT/3)
 
     # buffer - after drawing everything, flip display
     pg.display.flip()
